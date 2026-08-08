@@ -1,0 +1,50 @@
+==========================================
+           KEYGUARD SCAN REPORT
+==========================================
+
+Scan Date: 2026-08-07 22:52:25
+
+------------------------------------------
+PROCESS SCAN RESULTS
+------------------------------------------
+
+Total Processes Checked: 218
+Suspicious Processes: 2
+
+PID: 9920
+Process: CodeSetup-stable-e4c7e7b1d6d060162f4aa7f8225271b67ce1df75.tmp
+Location: C:\Users\Lenovo\AppData\Local\Temp\is-O2JR9.tmp\CodeSetup-stable-e4c7e7b1d6d060162f4aa7f8225271b67ce1df75.tmp
+Risk Score: 20/100
+Risk Level: LOW
+Reasons:
+- Process running from Temp folder
+
+PID: 14540
+Process: CodeSetup-stable-e4c7e7b1d6d060162f4aa7f8225271b67ce1df75.exe
+Location: C:\Users\Lenovo\AppData\Local\Temp\vscode-stable-user-x64\CodeSetup-stable-e4c7e7b1d6d060162f4aa7f8225271b67ce1df75.exe
+Risk Score: 20/100
+Risk Level: LOW
+Reasons:
+- Process running from Temp folder
+
+------------------------------------------
+STARTUP PROGRAMS
+------------------------------------------
+
+Startup Programs Found: 4
+
+Program: OneDrive
+Command: "C:\Program Files\Microsoft OneDrive\OneDrive.exe" /background
+
+Program: MicrosoftEdgeAutoLaunch_5EF70F99B4529735F3564FFE246DB961
+Command: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --win-session-start
+
+Program: RobloxPlayerBeta
+Command: "C:\Users\Lenovo\AppData\Local\Roblox\Versions\version-76173e47a79145c7\RobloxPlayerBeta.exe" --launch-to-tray
+
+Program: SecurityHealth
+Command: %windir%\system32\SecurityHealthSystray.exe
+
+------------------------------------------
+OVERALL RISK LEVEL: LOW
+------------------------------------------

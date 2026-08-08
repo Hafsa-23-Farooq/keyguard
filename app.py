@@ -1,7 +1,12 @@
 from flask import Flask, jsonify, send_from_directory
 import psutil
-import winreg
 import os
+import platform
+
+if platform.system() == "Windows":
+    import winreg
+else:
+    winreg = None
 
 
 app = Flask(__name__)
@@ -122,6 +127,9 @@ def scan_processes():
 def scan_startup():
 
     startup_programs = []
+
+    if winreg is None:
+        return startup_programs
 
     startup_locations = [
 

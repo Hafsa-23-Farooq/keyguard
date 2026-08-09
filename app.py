@@ -1,8 +1,9 @@
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory,request
 import psutil
 import os
 import platform
 
+# Windows registry is only available on Windows
 if platform.system() == "Windows":
     import winreg
 else:
@@ -49,7 +50,10 @@ def scan_processes():
 
                 process_path = process.exe()
 
-            except (psutil.AccessDenied, psutil.NoSuchProcess):
+            except (
+                psutil.AccessDenied,
+                psutil.NoSuchProcess
+            ):
 
                 process_path = "Unknown"
 
@@ -128,7 +132,9 @@ def scan_startup():
 
     startup_programs = []
 
+    # Vercel/Linux does not have Windows Registry
     if winreg is None:
+
         return startup_programs
 
     startup_locations = [
@@ -149,7 +155,10 @@ def scan_startup():
 
         try:
 
-            key = winreg.OpenKey(root, path)
+            key = winreg.OpenKey(
+                root,
+                path
+            )
 
             i = 0
 
@@ -232,20 +241,51 @@ def scan():
 
     return jsonify({
 
-    "processes": total_processes,
+        "processes": total_processes,
 
-    "suspicious": len(suspicious),
+        "suspicious": len(suspicious),
 
-    "startup": len(startup),
+        "startup": len(startup),
 
-    "risk": overall_risk,
+        "risk": overall_risk,
 
-    "suspicious_processes": suspicious,
+        "suspicious_processes": suspicious,
 
-    "startup_programs": startup
+        "startup_programs": startup
 
-})
+    })
+# ==========================================
+# RECEIVE AGENT REPORT
+# ==========================================
 
+latest_agent_report = {}
+
+
+@app.route("/api/report", methods=["POST"])
+def receive_report():
+
+    global latest_agent_report
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({
+            "success": False,
+            "message": "No report received"
+        }), 400
+
+    latest_agent_report = data
+
+    return jsonify({
+        "success": True,
+        "message": "Scan report received"
+    })
+
+
+@app.route("/api/report", methods=["GET"])
+def get_report():
+
+    return jsonify(latest_agent_report)
 
 # ==========================================
 # HOME PAGE
@@ -258,29 +298,48 @@ def home():
         "web",
         "index.html"
     )
+
+
+# ==========================================
+# REPORT
+# ==========================================
+
 @app.route("/report")
 def report():
 
     reports_folder = "reports"
 
     if not os.path.exists(reports_folder):
+
         return "No report available yet."
 
-    files = os.listdir(reports_folder)
+    files = os.listdir(
+        reports_folder
+    )
 
     report_files = [
-        file for file in files
+
+        file
+        for file in files
         if file.endswith(".txt")
+
     ]
 
     if not report_files:
+
         return "No report available yet."
 
     latest_report = max(
+
         report_files,
+
         key=lambda file: os.path.getmtime(
-            os.path.join(reports_folder, file)
+            os.path.join(
+                reports_folder,
+                file
+            )
         )
+
     )
 
     return send_from_directory(
@@ -296,15 +355,18 @@ def report():
 if __name__ == "__main__":
 
     print()
+
     print("==========================================")
     print("       KEYGUARD WEB SERVER")
     print("==========================================")
 
     print()
+
     print("Server running at:")
     print("http://127.0.0.1:5000")
 
     print()
+
     print("Press CTRL+C to stop the server.")
 
     app.run(

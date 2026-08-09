@@ -2,8 +2,11 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>KeyGuard</title>
 
@@ -66,6 +69,11 @@
             background: #1d4ed8;
         }
 
+        .scan-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
         .cards {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -105,6 +113,44 @@
             font-weight: bold;
         }
 
+        .section {
+            margin-top: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .section h2 {
+            margin-bottom: 15px;
+        }
+
+        .process-item {
+            text-align: left;
+            padding: 15px;
+            margin-top: 10px;
+            background: #fef2f2;
+            border-radius: 8px;
+            border-left: 5px solid #ef4444;
+        }
+
+        .startup-item {
+            text-align: left;
+            padding: 12px;
+            margin-top: 8px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .report-box {
+            margin-top: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
         footer {
             text-align: center;
             margin-top: 50px;
@@ -121,278 +167,472 @@
         }
 
     </style>
+
 </head>
 
 
 <body>
 
-    <header>
 
-        <h1>KeyGuard</h1>
+<header>
 
-        <p>
-            Intelligent Keylogger Detection System
-        </p>
+    <h1>KeyGuard</h1>
 
-    </header>
-
-
-    <div class="container">
-
-
-        <div class="scan-box">
-
-            <h2>Security Dashboard</h2>
-
-            <p style="margin-top: 10px;">
-                Scan your system for suspicious activity.
-            </p>
-
-            <button
-                class="scan-button"
-                onclick="startScan()">
-
-                START SECURITY SCAN
-
-            </button>
-
-        </div>
-
-
-        <div class="cards">
-
-
-            <div class="card">
-
-                <h3>Processes Checked</h3>
-
-                <p id="processes">
-                    --
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>Suspicious Processes</h3>
-
-                <p id="suspicious">
-                    --
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>Startup Programs</h3>
-
-                <p id="startup">
-                    --
-                </p>
-
-            </div>
-
-
-        </div>
-
-
-        <div class="risk">
-
-            <h2>Overall Risk Level</h2>
-
-            <div
-                class="risk-level"
-                id="risk">
-
-                --
-
-            </div>
-
-        </div>
-<div class="risk">
-
-    <h2> Suspicious Processes</h2>
-
-    <div id="suspicious-list">
-
-        <p>No scan performed yet.</p>
-
-    </div>
-
-</div>
-<div class="risk">
-
-    <h2>Startup Programs</h2>
-
-    <div id="startup-list">
-
-        <p>No scan performed yet.</p>
-
-    </div>
-
-</div>
-
-    </div>
-
-<div class="scan-box">
-
-    <h2> Scan Report</h2>
-
-    <p style="margin-top: 10px;">
-        View the latest KeyGuard security report.
+    <p>
+        Intelligent Keylogger Detection System
     </p>
 
-    <button
-        class="scan-button"
-        onclick="viewReport()">
+</header>
 
-        VIEW SCAN REPORT
 
-    </button>
+<div class="container">
+
+
+    <!-- SCAN DASHBOARD -->
+
+    <div class="scan-box">
+
+        <h2>Security Dashboard</h2>
+
+        <p style="margin-top: 10px;">
+            View the latest security scan from the KeyGuard agent.
+        </p>
+
+        <button
+            class="scan-button"
+            onclick="startScan()">
+
+            GET LATEST SECURITY SCAN
+
+        </button>
+
+        <p id="status"
+           style="margin-top: 15px; color: #6b7280;">
+        </p>
+
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+
+    <div class="cards">
+
+
+        <div class="card">
+
+            <h3>Processes Checked</h3>
+
+            <p id="processes">
+                --
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Suspicious Processes</h3>
+
+            <p id="suspicious">
+                --
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Startup Programs</h3>
+
+            <p id="startup">
+                --
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- RISK -->
+
+    <div class="risk">
+
+        <h2>Overall Risk Level</h2>
+
+        <div
+            class="risk-level"
+            id="risk">
+
+            --
+
+        </div>
+
+    </div>
+
+
+    <!-- SUSPICIOUS PROCESSES -->
+
+    <div class="section">
+
+        <h2>Suspicious Processes</h2>
+
+        <div id="suspicious-list">
+
+            <p>
+                No scan loaded yet.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- STARTUP PROGRAMS -->
+
+    <div class="section">
+
+        <h2>Startup Programs</h2>
+
+        <div id="startup-list">
+
+            <p>
+                No scan loaded yet.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- REPORT -->
+
+    <div class="report-box">
+
+        <h2>Scan Report</h2>
+
+        <p style="margin-top: 10px;">
+            View the latest KeyGuard security report.
+        </p>
+
+        <button
+            class="scan-button"
+            onclick="viewReport()">
+
+            VIEW SCAN REPORT
+
+        </button>
+
+    </div>
+
 
 </div>
-    <footer>
-
-        KeyGuard Security Tool
-
-    </footer>
 
 
-    <script>
-        function viewReport() {
+<footer>
 
-    window.open("/report", "_blank");
+    KeyGuard Security Tool
+
+</footer>
+
+
+<script>
+
+
+// ==========================================
+// VIEW REPORT
+// ==========================================
+
+function viewReport() {
+
+    window.open(
+        "/report",
+        "_blank"
+    );
 
 }
 
-        async function startScan() {
 
-    const button = document.querySelector(".scan-button");
+// ==========================================
+// LOAD LATEST AGENT REPORT
+// ==========================================
 
-    button.innerText = "SCANNING...";
-    button.disabled = true;
+async function startScan() {
+
+    const button =
+        document.querySelector(".scan-button");
+
+    const status =
+        document.getElementById("status");
+
+    button.innerText =
+        "LOADING...";
+
+    button.disabled =
+        true;
+
+    status.innerText =
+        "Getting latest report from KeyGuard agent...";
+
 
     try {
 
-        const response = await fetch("/scan");
 
-        const data = await response.json();
+        // Get report sent by agent.py
 
-        document.getElementById("processes").innerText =
-            data.processes;
+        const response =
+            await fetch(
+                "/api/report"
+            );
 
-        document.getElementById("suspicious").innerText =
-            data.suspicious;
 
-        document.getElementById("startup").innerText =
-            data.startup;
+        if (!response.ok) {
 
-        document.getElementById("risk").innerText =
-            data.risk;
-const suspiciousList =
-    document.getElementById("suspicious-list");
+            throw new Error(
+                "Server returned status " +
+                response.status
+            );
 
-if (data.suspicious_processes.length === 0) {
+        }
 
-    suspiciousList.innerHTML =
-        "<p> No suspicious processes detected.</p>";
 
-} else {
+        const data =
+            await response.json();
 
-    suspiciousList.innerHTML = "";
 
-    data.suspicious_processes.forEach(function(process) {
+        // Check if report exists
 
-        const item = document.createElement("div");
+        if (
+            !data ||
+            Object.keys(data).length === 0
+        ) {
 
-        item.style.textAlign = "left";
-        item.style.padding = "15px";
-        item.style.marginTop = "10px";
-        item.style.background = "#fef2f2";
-        item.style.borderRadius = "8px";
+            status.innerText =
+                "No agent scan has been received yet.";
 
-        item.innerHTML =
-            "<strong>Process:</strong> " +
-            process.name +
-            "<br>" +
+            return;
 
-            "<strong>PID:</strong> " +
-            process.pid +
-            "<br>" +
+        }
 
-            "<strong>Location:</strong> " +
-            process.location +
-            "<br>" +
 
-            "<strong>Risk Score:</strong> " +
-            process.score +
-            "/100" +
-            "<br>" +
+        // ==========================================
+        // UPDATE SUMMARY
+        // ==========================================
 
-            "<strong>Risk Level:</strong> " +
-            process.level +
-            "<br>" +
+        document.getElementById(
+            "processes"
+        ).innerText =
+            data.processes ?? 0;
 
-            "<strong>Reasons:</strong><br>" +
-            process.reasons.join("<br>");
 
-        suspiciousList.appendChild(item);
+        document.getElementById(
+            "suspicious"
+        ).innerText =
+            data.suspicious ?? 0;
 
-    });
-}
-const startupList =
-    document.getElementById("startup-list");
 
-if (data.startup_programs.length === 0) {
+        document.getElementById(
+            "startup"
+        ).innerText =
+            data.startup ?? 0;
 
-    startupList.innerHTML =
-        "<p>No startup programs found.</p>";
 
-} else {
+        document.getElementById(
+            "risk"
+        ).innerText =
+            data.risk ?? "UNKNOWN";
 
-    startupList.innerHTML = "";
 
-    data.startup_programs.forEach(function(program) {
+        // ==========================================
+        // SUSPICIOUS PROCESSES
+        // ==========================================
 
-        const item = document.createElement("div");
+        const suspiciousList =
+            document.getElementById(
+                "suspicious-list"
+            );
 
-        item.style.textAlign = "left";
-        item.style.padding = "12px";
-        item.style.marginTop = "8px";
-        item.style.background = "#f9fafb";
-        item.style.borderRadius = "8px";
 
-        item.innerHTML =
-            "<strong>Program:</strong> " +
-            program.name +
-            "<br>" +
+        if (
+            !data.suspicious_processes ||
+            data.suspicious_processes.length === 0
+        ) {
 
-            "<strong>Command:</strong> " +
-            program.command;
+            suspiciousList.innerHTML =
+                "<p>No suspicious processes detected.</p>";
 
-        startupList.appendChild(item);
+        }
 
-    });
-}
+        else {
+
+            suspiciousList.innerHTML = "";
+
+
+            data.suspicious_processes.forEach(
+                function(process) {
+
+
+                    const item =
+                        document.createElement("div");
+
+
+                    item.className =
+                        "process-item";
+
+
+                    item.innerHTML =
+
+                        "<strong>Process:</strong> " +
+                        escapeHTML(process.name) +
+
+                        "<br><strong>PID:</strong> " +
+                        escapeHTML(process.pid) +
+
+                        "<br><strong>Location:</strong> " +
+                        escapeHTML(process.location) +
+
+                        "<br><strong>Risk Score:</strong> " +
+                        escapeHTML(process.score) +
+                        "/100" +
+
+                        "<br><strong>Risk Level:</strong> " +
+                        escapeHTML(process.level) +
+
+                        "<br><strong>Reasons:</strong><br>" +
+                        escapeHTML(
+                            (process.reasons || []).join(", ")
+                        );
+
+
+                    suspiciousList.appendChild(
+                        item
+                    );
+
+
+                }
+            );
+
+        }
+
+
+        // ==========================================
+        // STARTUP PROGRAMS
+        // ==========================================
+
+        const startupList =
+            document.getElementById(
+                "startup-list"
+            );
+
+
+        if (
+            !data.startup_programs ||
+            data.startup_programs.length === 0
+        ) {
+
+            startupList.innerHTML =
+                "<p>No startup programs found.</p>";
+
+        }
+
+        else {
+
+            startupList.innerHTML = "";
+
+
+            data.startup_programs.forEach(
+                function(program) {
+
+
+                    const item =
+                        document.createElement("div");
+
+
+                    item.className =
+                        "startup-item";
+
+
+                    item.innerHTML =
+
+                        "<strong>Program:</strong> " +
+                        escapeHTML(program.name) +
+
+                        "<br><strong>Command:</strong> " +
+                        escapeHTML(program.command);
+
+
+                    startupList.appendChild(
+                        item
+                    );
+
+
+                }
+            );
+
+        }
+
+
+        status.innerText =
+            "Latest security report loaded successfully.";
+
+
     }
 
     catch (error) {
 
-        alert(
-            "Unable to connect to KeyGuard scanner."
-        );
 
         console.log(error);
 
+
+        status.innerText =
+            "Unable to load security report.";
+
+
+        alert(
+            "Unable to connect to KeyGuard server."
+        );
+
+
     }
 
-    button.innerText = "START SECURITY SCAN";
-    button.disabled = false;
+
+    finally {
+
+        button.innerText =
+            "GET LATEST SECURITY SCAN";
+
+        button.disabled =
+            false;
+
+    }
+
 }
 
-    </script>
+
+// ==========================================
+// BASIC HTML ESCAPING
+// ==========================================
+
+function escapeHTML(value) {
+
+    if (value === null ||
+        value === undefined) {
+
+        return "";
+
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+</script>
 
 
 </body>

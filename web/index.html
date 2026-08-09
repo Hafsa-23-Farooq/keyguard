@@ -5,8 +5,7 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>KeyGuard</title>
 
@@ -105,6 +104,7 @@
             padding: 25px;
             border-radius: 12px;
             text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
         .risk-level {
@@ -151,6 +151,16 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
+        .status {
+            margin-top: 15px;
+            color: #6b7280;
+        }
+
+        .last-scan {
+            margin-top: 8px;
+            color: #6b7280;
+        }
+
         footer {
             text-align: center;
             margin-top: 50px;
@@ -188,7 +198,7 @@
 <div class="container">
 
 
-    <!-- SCAN DASHBOARD -->
+    <!-- SECURITY DASHBOARD -->
 
     <div class="scan-box">
 
@@ -198,7 +208,9 @@
             View the latest security scan from the KeyGuard agent.
         </p>
 
+
         <button
+            id="scan-button"
             class="scan-button"
             onclick="startScan()">
 
@@ -206,8 +218,22 @@
 
         </button>
 
-        <p id="status"
-           style="margin-top: 15px; color: #6b7280;">
+
+        <p
+            id="status"
+            class="status">
+
+            System Status: Ready
+
+        </p>
+
+
+        <p
+            id="last-scan"
+            class="last-scan">
+
+            Last Scan: Not performed
+
         </p>
 
     </div>
@@ -261,8 +287,8 @@
         <h2>Overall Risk Level</h2>
 
         <div
-            class="risk-level"
-            id="risk">
+            id="risk"
+            class="risk-level">
 
             --
 
@@ -315,6 +341,7 @@
             View the latest KeyGuard security report.
         </p>
 
+
         <button
             class="scan-button"
             onclick="viewReport()">
@@ -345,10 +372,7 @@
 
 function viewReport() {
 
-    window.open(
-        "/report",
-        "_blank"
-    );
+    window.open("/report", "_blank");
 
 }
 
@@ -359,17 +383,26 @@ function viewReport() {
 
 async function startScan() {
 
+
     const button =
-        document.querySelector(".scan-button");
+        document.getElementById("scan-button");
+
 
     const status =
         document.getElementById("status");
 
+
+    const lastScan =
+        document.getElementById("last-scan");
+
+
     button.innerText =
         "LOADING...";
 
+
     button.disabled =
         true;
+
 
     status.innerText =
         "Getting latest report from KeyGuard agent...";
@@ -378,12 +411,8 @@ async function startScan() {
     try {
 
 
-        // Get report sent by agent.py
-
         const response =
-            await fetch(
-                "/api/report"
-            );
+    await fetch("https://keyguard-snowy.vercel.app/api/report");
 
 
         if (!response.ok) {
@@ -400,7 +429,7 @@ async function startScan() {
             await response.json();
 
 
-        // Check if report exists
+        // Check whether a report exists
 
         if (
             !data ||
@@ -416,31 +445,23 @@ async function startScan() {
 
 
         // ==========================================
-        // UPDATE SUMMARY
+        // SUMMARY VALUES
         // ==========================================
 
-        document.getElementById(
-            "processes"
-        ).innerText =
-            data.processes ?? 0;
+        document.getElementById("processes").innerText =
+            data.processes || 0;
 
 
-        document.getElementById(
-            "suspicious"
-        ).innerText =
-            data.suspicious ?? 0;
+        document.getElementById("suspicious").innerText =
+            data.suspicious || 0;
 
 
-        document.getElementById(
-            "startup"
-        ).innerText =
-            data.startup ?? 0;
+        document.getElementById("startup").innerText =
+            data.startup || 0;
 
 
-        document.getElementById(
-            "risk"
-        ).innerText =
-            data.risk ?? "UNKNOWN";
+        document.getElementById("risk").innerText =
+            data.risk || "UNKNOWN";
 
 
         // ==========================================
@@ -448,9 +469,7 @@ async function startScan() {
         // ==========================================
 
         const suspiciousList =
-            document.getElementById(
-                "suspicious-list"
-            );
+            document.getElementById("suspicious-list");
 
 
         if (
@@ -461,9 +480,8 @@ async function startScan() {
             suspiciousList.innerHTML =
                 "<p>No suspicious processes detected.</p>";
 
-        }
+        } else {
 
-        else {
 
             suspiciousList.innerHTML = "";
 
@@ -481,33 +499,29 @@ async function startScan() {
 
 
                     item.innerHTML =
-
                         "<strong>Process:</strong> " +
-                        escapeHTML(process.name) +
+                        safeText(process.name) +
 
                         "<br><strong>PID:</strong> " +
-                        escapeHTML(process.pid) +
+                        safeText(process.pid) +
 
                         "<br><strong>Location:</strong> " +
-                        escapeHTML(process.location) +
+                        safeText(process.location) +
 
                         "<br><strong>Risk Score:</strong> " +
-                        escapeHTML(process.score) +
+                        safeText(process.score) +
                         "/100" +
 
                         "<br><strong>Risk Level:</strong> " +
-                        escapeHTML(process.level) +
+                        safeText(process.level) +
 
                         "<br><strong>Reasons:</strong><br>" +
-                        escapeHTML(
+                        safeText(
                             (process.reasons || []).join(", ")
                         );
 
 
-                    suspiciousList.appendChild(
-                        item
-                    );
-
+                    suspiciousList.appendChild(item);
 
                 }
             );
@@ -520,9 +534,7 @@ async function startScan() {
         // ==========================================
 
         const startupList =
-            document.getElementById(
-                "startup-list"
-            );
+            document.getElementById("startup-list");
 
 
         if (
@@ -533,9 +545,8 @@ async function startScan() {
             startupList.innerHTML =
                 "<p>No startup programs found.</p>";
 
-        }
+        } else {
 
-        else {
 
             startupList.innerHTML = "";
 
@@ -553,18 +564,14 @@ async function startScan() {
 
 
                     item.innerHTML =
-
                         "<strong>Program:</strong> " +
-                        escapeHTML(program.name) +
+                        safeText(program.name) +
 
                         "<br><strong>Command:</strong> " +
-                        escapeHTML(program.command);
+                        safeText(program.command);
 
 
-                    startupList.appendChild(
-                        item
-                    );
-
+                    startupList.appendChild(item);
 
                 }
             );
@@ -572,11 +579,21 @@ async function startScan() {
         }
 
 
+        // ==========================================
+        // STATUS AND LAST SCAN
+        // ==========================================
+
         status.innerText =
-            "Latest security report loaded successfully.";
+            "System Status: Scan loaded successfully.";
+
+
+        lastScan.innerText =
+            "Last Scan: " +
+            new Date().toLocaleString();
 
 
     }
+
 
     catch (error) {
 
@@ -585,21 +602,22 @@ async function startScan() {
 
 
         status.innerText =
-            "Unable to load security report.";
+            "System Status: Unable to connect to server.";
 
 
         alert(
             "Unable to connect to KeyGuard server."
         );
 
-
     }
 
 
     finally {
 
+
         button.innerText =
             "GET LATEST SECURITY SCAN";
+
 
         button.disabled =
             false;
@@ -610,17 +628,21 @@ async function startScan() {
 
 
 // ==========================================
-// BASIC HTML ESCAPING
+// SAFE TEXT FUNCTION
 // ==========================================
 
-function escapeHTML(value) {
+function safeText(value) {
 
-    if (value === null ||
-        value === undefined) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
 
         return "";
 
     }
+
 
     return String(value)
         .replace(/&/g, "&amp;")

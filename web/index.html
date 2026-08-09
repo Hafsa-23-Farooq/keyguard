@@ -372,7 +372,17 @@
 
 function viewReport() {
 
-    window.open("/report", "_blank");
+    const link = document.createElement("a");
+
+    link.href = "/report";
+
+    link.download = "KeyGuard_Scan_Report.txt";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
 
 }
 

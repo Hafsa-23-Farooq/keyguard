@@ -304,50 +304,141 @@ def home():
 # REPORT
 # ==========================================
 
+# ==========================================
+# REPORT
+# ==========================================
+
 @app.route("/report")
 def report():
 
-    reports_folder = "reports"
+    if not latest_agent_report:
 
-    if not os.path.exists(reports_folder):
+        return "No scan report available yet."
 
-        return "No report available yet."
+    report = latest_agent_report
 
-    files = os.listdir(
-        reports_folder
+    report_text = f"""
+========================================
+        KEYGUARD SECURITY REPORT
+========================================
+
+Processes Checked: {report.get("processes", 0)}
+
+Suspicious Processes: {report.get("suspicious", 0)}
+
+Startup Programs: {report.get("startup", 0)}
+
+Overall Risk: {report.get("risk", "UNKNOWN")}
+
+
+----------------------------------------
+       SUSPICIOUS PROCESSES
+----------------------------------------
+
+"""
+
+    suspicious_processes = report.get(
+        "suspicious_processes",
+        []
     )
 
-    report_files = [
+    if not suspicious_processes:
 
-        file
-        for file in files
-        if file.endswith(".txt")
+        report_text += "No suspicious processes detected.\n"
 
-    ]
+    else:
 
-    if not report_files:
+        for process in suspicious_processes:
 
-        return "No report available yet."
+            report_text += f"""
+Process: {process.get("name", "Unknown")}
 
-    latest_report = max(
+PID: {process.get("pid", "Unknown")}
 
-        report_files,
+Location: {process.get("location", "Unknown")}
 
-        key=lambda file: os.path.getmtime(
-            os.path.join(
-                reports_folder,
-                file
-            )
-        )
+Risk Score: {process.get("score", 0)}/100
 
+Risk Level: {process.get("level", "UNKNOWN")}
+
+Reasons:
+"""
+
+            for reason in process.get("reasons", []):
+
+                report_text += f"- {reason}\n"
+
+    report_text += """
+
+----------------------------------------
+          STARTUP PROGRAMS
+----------------------------------------
+
+"""
+
+    startup_programs = report.get(
+        "startup_programs",
+        []
     )
 
-    return send_from_directory(
-        reports_folder,
-        latest_report
+    if not startup_programs:
+
+        report_text += "No startup programs found.\n"
+
+    else:
+
+        for program in startup_programs:
+
+            report_text += f"""
+Program: {program.get("name", "Unknown")}
+
+Command: {program.get("command", "Unknown")}
+
+"""
+
+    report_text += """
+========================================
+        END OF KEYGUARD REPORT
+========================================
+"""
+
+    return (
+        report_text,
+        200,
+        {
+            "Content-Type": "text/plain",
+            "Content-Disposition":
+                "attachment; filename=KeyGuard_Scan_Report.txt"
+        }
     )
 
 
+# ==========================================
+# START SERVER
+# ==========================================
+
+if __name__ == "__main__":
+
+    print()
+
+    print("==========================================")
+    print("       KEYGUARD WEB SERVER")
+    print("==========================================")
+
+    print()
+
+    print("Server running at:")
+    print("http://127.0.0.1:5000")
+
+    print()
+
+    print("Press CTRL+C to stop the server.")
+
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
 # ==========================================
 # START SERVER
 # ==========================================
